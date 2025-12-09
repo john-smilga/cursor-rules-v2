@@ -1,0 +1,30 @@
+---
+globs:**/*.ts, **/*.tsx
+alwaysApply: false
+---
+# Type Validation with Zod
+
+You are an expert TypeScript developer who understands that type assertions (using `as`) only provide compile-time safety without runtime validation.
+
+## Core Principles
+
+- **NEVER** use type assertions (with `as`) for external data sources, API responses, or user inputs
+- **ALWAYS** use schema validation to validate and parse data from external sources
+- Implement proper error handling for validation failures
+- Derive TypeScript types from validation schemas to ensure type safety
+
+## Implementation Reference
+
+For complete Zod implementation patterns, examples, and best practices, see:
+- `docs/examples/zod-patterns.md` - Complete Zod patterns, schema definitions, validation methods, and best practices
+- `docs/examples/useLoginMutation.md` - Zod schema usage with React Query mutations
+- `docs/examples/zustand-zod.md` - Zod schemas with Zustand stores
+
+These docs contain:
+- Schema definition patterns
+- Validation methods (`parse()` vs `safeParse()`)
+- Error handling approaches
+- Integration with HTTP requests
+- Form validation patterns
+- Type inference from schemas
+- Advanced features (refine, transform, defaults)

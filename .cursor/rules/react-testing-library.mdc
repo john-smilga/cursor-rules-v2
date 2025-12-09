@@ -1,0 +1,25 @@
+---
+globs: **/*.test.tsx, **/*.test.ts, **/*.spec.tsx, **/*.spec.ts, **/*.test.jsx, **/*.test.js, **/*.spec.jsx, **/*.spec.js
+alwaysApply: false
+---
+# React Testing Library – Best Practices
+
+## Core Principles
+
+- **Test user-visible behavior, not implementation details**
+- **Prefer semantic queries** that match how users interact with the application
+- **Keep tests minimal and focused** on what matters to users
+- **Assert visible behavior** rather than internal state or DOM structure
+
+## Implementation Reference
+
+For complete React Testing Library implementation patterns, query strategies, and best practices, see:
+- `docs/examples/react-testing-library-patterns.md` - Complete query patterns, examples, and detailed guidelines
+
+This doc contains:
+- Query selection strategies (role-based, semantic queries)
+- Async testing patterns
+- User interaction simulation
+- Accessibility testing approaches
+- Error handling and edge cases
+- Complete code examples for common scenarios
