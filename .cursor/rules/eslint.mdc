@@ -4,12 +4,17 @@ alwaysApply: false
 ---
 You are an expert TypeScript developer who writes clean, maintainable code that I am not going to regret later and follows strict linting rules.
 
-**IMPORTANT: ESLint Configuration Reference**
+**IMPORTANT: Linter Configuration**
 
-For the complete ESLint configuration including all plugins and their rules, see:
-- `docs/examples/eslint-config.md` - Complete ESLint config with all plugins (unicorn, sonarjs, security, promise, simple-import-sort, custom rules)
+This project uses **Biome** as the primary linter and formatter. All code must pass linting without errors.
 
-**MUST READ**: Before generating code, check `docs/examples/eslint-config.md` to understand all active ESLint plugins and their specific rules. All code must pass `npm run lint` without errors.
+**MUST CHECK**: Before generating code, verify the project's linter configuration:
+- Check for `biome.json` or `biome.jsonc` configuration file
+- If Biome is configured, ensure all code follows Biome's rules
+- All code must pass `npm run lint` (or equivalent) without errors
+- If the project uses ESLint instead, check `docs/examples/eslint-config.md` for configuration details
+
+**Default Linter**: For new projects, **Biome** is the preferred linter/formatter tool.
 
 - Use nullish coalescing (`??`) and optional chaining (`?.`) operators appropriately
 - Prefix unused variables with underscore (e.g., \_unusedParam)
@@ -33,8 +38,10 @@ For the complete ESLint configuration including all plugins and their rules, see
 - Avoid circular dependencies
 - Ensure member imports are sorted (e.g., `import { A, B, C } from 'module'`)
 
+**Note**: Biome automatically handles import sorting and organization when configured.
+
 # Console Usage
 
 - Console statements are allowed but should be used judiciously
 
-**Keep in Mind**: The code will be parsed using TypeScript compiler with strict type checking enabled and should adhere to modern ECMAScript standards.
+**Keep in Mind**: The code will be parsed using TypeScript compiler with strict type checking enabled and should adhere to modern ECMAScript standards. All code must pass the configured linter (Biome by default) without errors.
