@@ -78,33 +78,21 @@ alwaysApply: false
 
 ---
 
-# ESLINT, UNICORN & CUSTOM RULES
+# LINTING & FORMATTING (TOOL-AGNOSTIC)
 
-- All code must be written to **pass ESLint** as configured in this repo, including:
-  - Core ESLint rules
-  - TypeScript ESLint rules
-  - **Unicorn** rules
-  - Any **custom rules** defined for the project
-- Assume `npm run lint`, `yarn lint`, or `pnpm lint` will run after your changes.
+- All code must be written to **pass the repo’s configured linter and formatter** (Biome by default).
+- Assume `npm run lint` / `pnpm lint` / `yarn lint` (or equivalent) will run after changes.
+- Do not leave:
+  - Unused variables / parameters
+  - Unused imports
+  - Unreachable code
+- Avoid disabling lint rules via inline comments unless explicitly requested or clearly justified with an explanatory comment.
+- Follow the existing codebase’s conventions for:
+  - Import organization
+  - Naming
+  - Quotes / semicolons / formatting
 
-## ESLint Behavior
-
-- Do not leave unused variables, unused imports, or unreachable code.
-- Avoid disabling ESLint rules with `// eslint-disable` comments unless explicitly requested or clearly justified in a comment.
-- Follow existing style for:
-  - Import order and grouping
-  - Quote style
-  - Semicolons
-  - Spacing and naming conventions
-- Prefer named exports/imports consistent with the current codebase.
-
-## Unicorn Mindset
-
-- Prefer clear, explicit code that aligns with Unicorn’s focus on:
-  - Modern language features
-  - Self-documenting identifiers (no cryptic abbreviations)
-  - Safer APIs and patterns
-- When unsure, choose the option that is **safer, more explicit, and more consistent** with existing patterns.
+When unsure, choose the option that is **safer, more explicit, and more consistent** with existing patterns.
 
 ---
 
@@ -112,10 +100,12 @@ alwaysApply: false
 
 Treat the following files as **protected** and do not alter them unless the user explicitly asks:
 
-- **ESLint configs:**
+- **Linter/formatter configs (if present):**
+  - `biome.json`
+  - `biome.jsonc`
   - `.eslintrc*`
   - `eslint.config.*`
-  - `package.json` → `eslintConfig`
+  - `package.json` → `eslintConfig` (if used)
 - **TypeScript configs:**
   - `tsconfig.json`
   - Any `tsconfig.*.json` used for app/lib/test
@@ -164,12 +154,12 @@ If code conflicts with these configs, **fix the code**, not the configuration.
 - All diffs and suggested changes must:
   - Be valid, strict TypeScript code with no `any`.
   - Respect the project’s strict TS configuration and type safety rules.
-  - Pass ESLint with the current configuration (including Unicorn and custom rules).
+  - Pass the repo’s configured linter/formatter (Biome by default).
 - Do **not**:
   - Introduce unused imports or variables.
   - Add `console.log` or other debug output unless explicitly requested (and then prefer removing it before finalization).
   - Add commented-out code, scaffolding, or temporary debug code unless explicitly requested.
-  - Modify ESLint or TypeScript config files unless the user explicitly asks.
+  - Modify linter/formatter or TypeScript config files unless the user explicitly asks.
 
 ---
 
@@ -186,11 +176,11 @@ If code conflicts with these configs, **fix the code**, not the configuration.
 
 # FALLBACK RULES
 
-- Prefer **strict type safety** and **ESLint compliance** over clever or overly concise code.
+- Prefer **strict type safety** and **lint/format compliance** over clever or overly concise code.
 - Prefer **consistency with the existing codebase** over introducing new patterns.
 - Prefer **explicit, typed, and predictable** code over dynamic and implicit patterns.
 - When in doubt, choose the simplest implementation that:
   - Has **no `any`**,
   - Works under strict TypeScript settings,
-  - Passes ESLint (including Unicorn and custom rules),
-  - Does **not** modify ESLint or TypeScript configuration files.
+  - Passes the configured linter/formatter,
+  - Does **not** modify linter/formatter or TypeScript configuration files.

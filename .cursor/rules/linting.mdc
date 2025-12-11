@@ -12,7 +12,7 @@ This project uses **Biome** as the primary linter and formatter. All code must p
 - Check for `biome.json` or `biome.jsonc` configuration file
 - If Biome is configured, ensure all code follows Biome's rules
 - All code must pass `npm run lint` (or equivalent) without errors
-- If the project uses ESLint instead, check `docs/examples/eslint-config.md` for configuration details
+- If the project uses ESLint instead, follow the repo’s existing ESLint configuration files (e.g., `.eslintrc*`, `eslint.config.*`, or `package.json` → `eslintConfig`)
 
 **Default Linter**: For new projects, **Biome** is the preferred linter/formatter tool.
 
@@ -28,17 +28,6 @@ This project uses **Biome** as the primary linter and formatter. All code must p
 - Use rest parameters instead of `arguments` object
 - Use template literals instead of string concatenation
 
-# Import Organization
-
-- Keep imports at the top of the file
-- Group imports in this order: `built-in → external → internal → parent → sibling → index → object → type`
-- Add blank lines between import groups
-- Sort imports alphabetically within each group
-- Avoid duplicate imports
-- Avoid circular dependencies
-- Ensure member imports are sorted (e.g., `import { A, B, C } from 'module'`)
-
-**Note**: Biome automatically handles import sorting and organization when configured.
 
 # Console Usage
 

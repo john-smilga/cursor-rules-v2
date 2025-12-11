@@ -9,6 +9,10 @@ If you need to clarify anything before starting the task, ask your questions fir
 
 When making a commit, always use a short and clear commit message.
 
+Always use context7 when I need code generation, setup or configuration steps, or
+library/API documentation. This means you should automatically use the Context7 MCP
+tools to resolve library id and get library docs without me having to explicitly ask.
+
 
 ## CRITICAL: Always Work in Smallest Steps
 
@@ -86,6 +90,3 @@ class User(AbstractUser):
 **Is this step okay? Say 'ok' or 'next' to proceed.**
 
 
-Always use context7 when I need code generation, setup or configuration steps, or
-library/API documentation. This means you should automatically use the Context7 MCP
-tools to resolve library id and get library docs without me having to explicitly ask.

@@ -1,0 +1,97 @@
+---
+globs: **/*.py
+alwaysApply: false
+---
+
+# Django + DRF Rules (Behavior)
+
+These rules apply when working in a Django + Django REST Framework (DRF) codebase.
+
+- For folder layout / naming / where files go: follow `docs/structure/django.md`.
+- This file is intentionally about **behavior and boundaries**, not structure.
+
+---
+
+## DJANGO + DRF API STYLE
+
+- This project exposes **JSON APIs**, not HTML templates.
+- Prefer DRF views/viewsets; avoid Django template views unless explicitly requested.
+- Prefer **ViewSets** for standard CRUD.
+- Always return DRF `Response` objects with appropriate status codes.
+- Use pagination for list endpoints if returning more than trivial lists.
+
+---
+
+## VIEWS: THIN (ORCHESTRATION ONLY)
+
+- Views should orchestrate: authenticate → authorize → call service/domain logic → serialize response.
+- Do not put business rules in:
+  - Views
+  - Serializers
+  - Signals
+
+---
+
+## SERVICES / DOMAIN LOGIC
+
+- Business logic must live in `services/` (or clearly named domain modules).
+- Services should:
+  - Take explicit arguments (avoid passing the request object through)
+  - Be easy to test
+  - Be reusable across views/serializers/tasks/management commands
+  - Prefer pure or side-effect-light functions where reasonable
+
+---
+
+## SERIALIZERS
+
+- Use serializers for:
+  - Input validation
+  - Output shaping
+  - Simple transformations
+- Avoid embedding complex business logic in serializers; push it into services.
+
+---
+
+## PERMISSIONS / AUTHZ
+
+- Use DRF permission classes.
+- Keep permission logic reusable (prefer dedicated permission modules/classes).
+- Avoid inline permission logic inside views.
+
+---
+
+## MODELS / DATABASE / MIGRATIONS
+
+- Any model change must have a corresponding migration.
+- Do not modify historical migrations unless explicitly requested.
+- For large/risky schema changes, favor backwards-compatible multi-step migrations.
+- For data migrations:
+  - Use `RunPython`
+  - Make them idempotent and safe to re-run
+  - Add brief comments describing assumptions
+
+---
+
+## URL ROUTING
+
+- Prefer DRF routers for ViewSets when appropriate.
+- Group URL patterns by app.
+- Use descriptive route names.
+
+---
+
+## ORM PERFORMANCE
+
+- Be mindful of ORM performance:
+  - Use `select_related` / `prefetch_related` to avoid N+1 queries
+  - Avoid heavy Python loops over QuerySets when queries can be optimized
+- For heavy/long-running operations, prefer background tasks over request/response blocking.
+
+---
+
+## SECURITY (DJANGO/DRF-SPECIFIC)
+
+- Use Django/DRF authentication and permission systems correctly; do not bypass them.
+- Validate external input at the boundary (serializers/forms), not deep inside the domain.
+- Avoid returning internal error details to clients; surface safe, user-facing messages.
