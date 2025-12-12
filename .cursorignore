@@ -1,0 +1,4 @@
+# Exclude cursor docs from being loaded into context
+# These docs are referenced by rules but don't need to be in every prompt
+.cursor/docs/**
+

@@ -16,9 +16,9 @@ You are an expert TypeScript developer who understands that type assertions (usi
 ## Implementation Reference
 
 For complete Zod implementation patterns, examples, and best practices, see:
-- `docs/examples/zod-patterns.md` - Complete Zod patterns, schema definitions, validation methods, and best practices
-- `docs/examples/useLoginMutation.md` - Zod schema usage with React Query mutations
-- `docs/examples/zustand-zod.md` - Zod schemas with Zustand stores
+- `.cursor/docs/examples/zod-patterns.md` - Complete Zod patterns, schema definitions, validation methods, and best practices
+- `.cursor/docs/examples/useLoginMutation.md` - Zod schema usage with React Query mutations
+- `.cursor/docs/examples/zustand-zod.md` - Zod schemas with Zustand stores
 
 These docs contain:
 - Schema definition patterns

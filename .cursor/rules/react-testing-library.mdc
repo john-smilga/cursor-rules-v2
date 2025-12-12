@@ -14,7 +14,7 @@ alwaysApply: false
 ## Implementation Reference
 
 For complete React Testing Library implementation patterns, query strategies, and best practices, see:
-- `docs/examples/react-testing-library-patterns.md` - Complete query patterns, examples, and detailed guidelines
+- `.cursor/docs/examples/react-testing-library-patterns.md` - Complete query patterns, examples, and detailed guidelines
 
 This doc contains:
 - Query selection strategies (role-based, semantic queries)

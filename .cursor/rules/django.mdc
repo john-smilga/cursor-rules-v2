@@ -7,7 +7,7 @@ alwaysApply: false
 
 These rules apply when working in a Django + Django REST Framework (DRF) codebase.
 
-- For folder layout / naming / where files go: follow `docs/structure/django.md`.
+- For folder layout / naming / where files go: follow `.cursor/docs/structure/django.md`.
 - This file is intentionally about **behavior and boundaries**, not structure.
 
 ---
