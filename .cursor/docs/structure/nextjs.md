@@ -1,539 +1,641 @@
-# Next.js 16 Generic Structure Guide
+# Front-End Project Structure Template
 
-This guide documents the recommended folder structure for organizing features, components, queries, stores, schemas, and tests in a Next.js 16 application with TypeScript, React Query, shadcn/ui, Tailwind CSS, React Hook Form, Zod, Zustand, Vitest, and React Testing Library.
+This document provides a comprehensive template for organizing a Next.js front-end project. **IMPORTANT**: Only install libraries and create folders when you have a specific need for them. Do not add dependencies or setup files "just in case" - start minimal and add as needed.
 
-## Tech Stack
-
-- **Next.js 16** - App Router with React Server Components
-- **TypeScript** - Strict type checking
-- **React Query (TanStack Query)** - Data fetching and caching
-- **shadcn/ui** - Component library
-- **Tailwind CSS** - Utility-first CSS
-- **React Hook Form** - Form management
-- **Zod** - Schema validation
-- **Zustand** - State management
-- **Vitest** - Unit and integration testing
-- **React Testing Library** - Component testing
-
-## Naming Conventions
-
-**All file names must use kebab-case** (ESLint Unicorn requirement):
-
-✅ **Good**: `login-form.tsx`, `use-login-mutation.ts`, `auth-store.ts`
-❌ **Bad**: `LoginForm.tsx`, `useLoginMutation.ts`, `authStore.ts`
-
-**Exception**: Next.js route files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`) remain as-is.
-
-## Core Principle
-
-**Routes are URLs; Features are domain boundaries. They don't need to match.**
-
-- Routes reflect the URL hierarchy (e.g., `/stores/[storeId]/products`)
-- Features reflect domain boundaries and business logic (e.g., `features/stores/`, `features/products/`)
-- A single feature can be used across multiple routes
-- Routes compose features, but features don't know about routes
-
-## Complete Folder Structure
+## 📁 Complete Directory Structure
 
 ```
-project/
-├── app/                              # Next.js app directory (routes)
-│   ├── (auth)/                       # Public routes 
-│   │   ├── login/
+front-end/
+├── app/                                    # Next.js App Router (required)
+│   ├── dashboard/                          # Protected dashboard routes
+│   │   ├── displays/                       # Feature route example
+│   │   │   ├── [displaySlug]/             # Dynamic route segment
+│   │   │   │   └── page.tsx
+│   │   │   ├── new/                        # Create new item route
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx                   # List/index page
+│   │   ├── my-profile/
 │   │   │   └── page.tsx
-│   │   └── register/
-│   │       └── page.tsx
-│   │
-│   ├── dashboard/                  # Protected routes 
+│   │   ├── planograms/
+│   │   │   └── page.tsx
+│   │   ├── projects/
+│   │   │   ├── [projectSlug]/             # Dynamic route with nested pages
+│   │   │   │   └── [multiple files]
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
 │   │   ├── stores/
-│   │   │   ├── page.tsx
-│   │   │   ├── create/
+│   │   │   ├── [storeSlug]/
+│   │   │   │   └── [files]
+│   │   │   ├── new/
 │   │   │   │   └── page.tsx
-│   │   │   └── [store-id]/
-│   │   │       ├── page.tsx
-│   │   │       └── edit/
-│   │   │           └── page.tsx
-│   │   │
-│   │   ├── products/
-│   │   │   ├── page.tsx
-│   │   │   ├── create/
+│   │   │   └── page.tsx
+│   │   ├── users/
+│   │   │   ├── [userSlug]/
 │   │   │   │   └── page.tsx
-│   │   │   └── [product-id]/
-│   │   │       ├── page.tsx
-│   │   │       └── edit/
-│   │   │           └── page.tsx
-│   │   │
-│   │   └── layout.tsx                # Dashboard layout with navigation
-│   │
-│   ├── layout.tsx                    # Root layout
-│   ├── page.tsx                      # Home page
-│   └── providers.tsx                 # React Query and other providers
+│   │   │   ├── invite/
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx                     # Dashboard layout wrapper
+│   │   └── page.tsx                       # Dashboard home page
+│   ├── login/                              # Authentication routes
+│   │   └── page.tsx
+│   ├── register/
+│   │   └── page.tsx
+│   ├── layout.tsx                         # Root layout (required)
+│   ├── page.tsx                            # Home/landing page (required)
+│   ├── providers.tsx                       # Global providers wrapper
+│   ├── globals.css                         # Global styles (required if using CSS)
+│   └── favicon.ico                         # Site favicon
 │
-├── features/                         # Feature-based organization
-│   ├── auth/
-│   │   ├── components/
-│   │   │   ├── login-form/
-│   │   │   │   ├── login-form.tsx
-│   │   │   │   └── login-form.test.tsx
-│   │   │   ├── register-form/
-│   │   │   │   ├── register-form.tsx
-│   │   │   │   └── register-form.test.tsx
-│   │   │   └── index.ts              # Re-exports
-│   │   ├── queries/
-│   │   │   ├── use-login-mutation.ts
-│   │   │   ├── use-login-mutation.test.ts
-│   │   │   ├── use-register-mutation.ts
-│   │   │   ├── use-register-mutation.test.ts
-│   │   │   ├── use-current-user-query.ts
-│   │   │   ├── use-current-user-query.test.ts
-│   │   │   └── index.ts
-│   │   ├── schemas/
-│   │   │   ├── login-schema.ts
-│   │   │   ├── register-schema.ts
-│   │   │   └── index.ts
-│   │   ├── store/
-│   │   │   ├── auth-store.ts
-│   │   │   ├── auth-store.test.ts
-│   │   │   └── index.ts
-│   │   └── types.ts
-│   │
-│   ├── stores/
-│   │   ├── components/
-│   │   │   ├── store-list/
-│   │   │   │   ├── store-list.tsx
-│   │   │   │   └── store-list.test.tsx
-│   │   │   ├── store-card/
-│   │   │   │   ├── store-card.tsx
-│   │   │   │   └── store-card.test.tsx
-│   │   │   ├── store-detail/
-│   │   │   │   ├── store-detail.tsx
-│   │   │   │   └── store-detail.test.tsx
-│   │   │   ├── store-form/
-│   │   │   │   ├── store-form.tsx
-│   │   │   │   └── store-form.test.tsx
-│   │   │   └── index.ts
-│   │   ├── queries/
-│   │   │       ├── use-stores-query.ts
-│   │   │       ├── use-stores-query.test.ts
-│   │   │       ├── use-store-query.ts
-│   │   │       ├── use-store-query.test.ts
-│   │   │       ├── use-create-store-mutation.ts
-│   │   │       ├── use-create-store-mutation.test.ts
-│   │   │       ├── use-update-store-mutation.ts
-│   │   │       ├── use-update-store-mutation.test.ts
-│   │   │       ├── use-delete-store-mutation.ts
-│   │   │       ├── use-delete-store-mutation.test.ts
-│   │   │       └── index.ts
-│   │   ├── store/
-│   │   │   ├── store-store.ts        # Zustand store for store feature
-│   │   │   ├── store-store.test.ts
-│   │   │   └── index.ts
-│   │   ├── schemas/
-│   │   │   ├── store-form-schema.ts
-│   │   │   └── index.ts
-│   │   └── types.ts
-│   │
-│   └── products/
-│       ├── components/
-│       │   ├── product-list/
-│       │   │   ├── product-list.tsx
-│       │   │   └── product-list.test.tsx
-│       │   ├── product-card/
-│       │   │   ├── product-card.tsx
-│       │   │   └── product-card.test.tsx
-│       │   ├── product-detail/
-│       │   │   ├── product-detail.tsx
-│       │   │   └── product-detail.test.tsx
-│       │   ├── product-form/
-│       │   │   ├── product-form.tsx
-│       │   │   └── product-form.test.tsx
-│       │   └── index.ts
-│       ├── queries/
-│       │       ├── use-products-query.ts
-│       │       ├── use-products-query.test.ts
-│       │       ├── use-product-query.ts
-│       │       ├── use-product-query.test.ts
-│       │       ├── use-create-product-mutation.ts
-│       │       ├── use-create-product-mutation.test.ts
-│       │       ├── use-update-product-mutation.ts
-│       │       ├── use-update-product-mutation.test.ts
-│       │       ├── use-delete-product-mutation.ts
-│       │       ├── use-delete-product-mutation.test.ts
-│       │       └── index.ts
-│       ├── store/
-│       │   ├── product-store.ts
-│       │   ├── product-store.test.ts
-│       │   └── index.ts
-│       ├── schemas/
-│       │   ├── product-form-schema.ts
-│       │   └── index.ts
-│       └── types.ts
-│
-├── store/                            # Global Zustand store (if needed)
-│   ├── index.ts                      # Store setup with createSelectors
-│   ├── index.test.ts
-│   └── slices/
-│       ├── user-slice.ts
-│       ├── user-slice.test.ts
-│       ├── cart-slice.ts
-│       ├── cart-slice.test.ts
-│       └── index.ts
-│
-├── lib/                              # Shared utilities and configurations
-│   ├── http/
-│   │   ├── client.ts                 # HTTP client (fetch/axios)
-│   │   ├── client.test.ts
-│   │   ├── http-request.ts           # Request wrapper with Zod validation
-│   │   ├── http-request.test.ts
-│   │   ├── errors.ts                 # Error normalization
-│   │   └── errors.test.ts
-│   ├── react-query/
-│   │   ├── client.ts                # QueryClient configuration
-│   │   └── client.test.ts
-│   ├── zustand/
-│   │   └──create-selectors.ts           # Zustand selector helper
-│   ├── utils/
-│   │   ├── utils.ts                      # General utilities
-│   │   └── utils.test.ts
-│   └── test-utils/
-│       └── test-utils.tsx                 # Testing utilities (RTL setup, mocks)
-│
-├── components/                       # Shared UI components
-│   ├── ui/                           # shadcn/ui components
+├── components/                             # Shared/reusable components
+│   ├── ui/                                 # ⚠️ OPTIONAL: shadcn/ui components
+│   │   ├── alert-dialog.tsx
+│   │   ├── alert.tsx
+│   │   ├── badge.tsx
+│   │   ├── breadcrumb.tsx
 │   │   ├── button.tsx
-│   │   ├── button.test.tsx
-│   │   ├── input.tsx
-│   │   ├── input.test.tsx
 │   │   ├── card.tsx
-│   │   ├── card.test.tsx
-│   │   └── ...                       # Other shadcn components
-│   ├── form/                         
-│   │   ├── form.tsx                  
-│   │   └── form.test.tsx             
-│   └── layout/                       # Layout components
-│       ├── header/
-│       │   ├── header.tsx
-│       │   └── header.test.tsx
-│       ├── footer/
-│       │   ├── footer.tsx
-│       │   └── footer.test.tsx
-│       ├── navigation/
-│       │   ├── navigation.tsx
-│       │   └── navigation.test.tsx
+│   │   ├── checkbox.tsx
+│   │   ├── dialog.tsx
+│   │   ├── dropdown-menu.tsx
+│   │   ├── form-field.tsx
+│   │   ├── form-select-field.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── popover.tsx
+│   │   ├── radio-group.tsx
+│   │   ├── select.tsx
+│   │   ├── separator.tsx
+│   │   └── textarea.tsx
+│   ├── AdminOnly.tsx                       # Permission-based components
+│   ├── AuthenticatedLayout.tsx             # Auth wrapper component
+│   ├── AuthProvider.tsx                    # Auth context provider
+│   ├── Breadcrumbs.tsx                     # Navigation breadcrumbs
+│   ├── DetailField.tsx                     # Reusable detail display
+│   ├── EmptyState.tsx                      # Empty state component
+│   ├── InfoAlert.tsx                       # Alert/notification component
+│   ├── Navbar.tsx                          # Navigation bar
+│   ├── ThemeToggle.tsx                     # Theme switcher (if using themes)
+│   └── UserMenu.tsx                        # User menu dropdown
+│
+├── features/                               # Feature-based organization (recommended)
+│   ├── auth/                               # Authentication feature
+│   │   ├── components/                     # Feature-specific components
+│   │   │   ├── index.ts                    # Barrel export
+│   │   │   └── login-form/                 # Component folder pattern
+│   │   │       └── login-form.tsx
+│   │   ├── hooks/                          # Feature-specific hooks
+│   │   │   ├── index.ts
+│   │   │   ├── use-is-admin.ts
+│   │   │   └── use-require-admin.ts
+│   │   ├── queries/                        # ⚠️ OPTIONAL: React Query hooks
+│   │   │   ├── index.ts
+│   │   │   ├── use-current-user-query.ts
+│   │   │   ├── use-login-mutation.ts
+│   │   │   ├── use-logout-mutation.ts
+│   │   │   ├── use-register-mutation.ts
+│   │   │   └── use-update-username-mutation.ts
+│   │   ├── store/                          # ⚠️ OPTIONAL: Zustand store
+│   │   │   ├── auth-slice.ts
+│   │   │   └── index.ts
+│   │   ├── types.ts                        # Feature TypeScript types
+│   │   └── index.ts                        # Public exports
+│   ├── dashboard/                          # Dashboard feature
+│   │   ├── components/
+│   │   │   ├── index.ts
+│   │   │   ├── dashboard-content/
+│   │   │   │   └── [component files]
+│   │   │   └── dashboard-header/
+│   │   │       └── [component files]
+│   │   └── index.ts
+│   ├── displays/                           # Displays feature
+│   │   ├── components/
+│   │   │   ├── display-card/
+│   │   │   ├── display-detail/
+│   │   │   ├── display-form/
+│   │   │   ├── display-list/
+│   │   │   ├── display-selector/
+│   │   │   └── index.ts
+│   │   ├── queries/                        # ⚠️ OPTIONAL: React Query
+│   │   │   ├── use-create-display-mutation.ts
+│   │   │   ├── use-delete-display-mutation.ts
+│   │   │   ├── use-display-query.ts
+│   │   │   ├── use-display-types-query.ts
+│   │   │   ├── use-displays-query.ts
+│   │   │   ├── use-standard-displays-query.ts
+│   │   │   └── index.ts
+│   │   ├── types.ts
+│   │   └── index.ts
+│   ├── planogram/                          # Planogram feature
+│   │   ├── components/                     # Many component folders
+│   │   │   ├── ai-overview-dialog/
+│   │   │   ├── available-products-sidebar/
+│   │   │   ├── category-select/
+│   │   │   ├── grid/
+│   │   │   ├── item-menu/
+│   │   │   ├── name-input/
+│   │   │   ├── planogram-actions/
+│   │   │   ├── planogram-card/
+│   │   │   ├── planogram-categories-selector/
+│   │   │   ├── planogram-delete-button/
+│   │   │   ├── planogram-download-button/
+│   │   │   ├── planogram-form-fields/
+│   │   │   ├── planogram-header/
+│   │   │   ├── planogram-name-field/
+│   │   │   ├── product-sidebar/
+│   │   │   ├── project-display/
+│   │   │   ├── row-header/
+│   │   │   ├── shelves-table/
+│   │   │   ├── three-js-view/              # ⚠️ OPTIONAL: Three.js component
+│   │   │   └── index.ts
+│   │   ├── hooks/
+│   │   │   ├── index.ts
+│   │   │   ├── use-grid-actions.ts
+│   │   │   ├── use-planogram-data.ts
+│   │   │   ├── use-planogram-form.ts
+│   │   │   └── use-planogram-layout.ts
+│   │   ├── queries/                        # ⚠️ OPTIONAL: React Query
+│   │   │   └── [multiple query files]
+│   │   ├── store/                          # ⚠️ OPTIONAL: Zustand
+│   │   │   ├── planogram-slice.ts
+│   │   │   └── index.ts
+│   │   ├── types.ts
+│   │   └── index.ts
+│   ├── projects/                           # Projects feature
+│   │   ├── components/
+│   │   │   └── [component files]
+│   │   ├── queries/                        # ⚠️ OPTIONAL: React Query
+│   │   │   └── [query files]
+│   │   ├── types.ts
+│   │   └── index.ts
+│   ├── stores/                             # Stores feature
+│   │   ├── components/
+│   │   │   ├── store-card/
+│   │   │   ├── store-detail/
+│   │   │   ├── store-form/
+│   │   │   ├── store-list/
+│   │   │   └── index.ts
+│   │   ├── queries/                        # ⚠️ OPTIONAL: React Query
+│   │   │   └── [query files]
+│   │   ├── types.ts
+│   │   └── index.ts
+│   └── users/                              # Users feature
+│       ├── components/
+│       │   └── [component files]
+│       ├── queries/                        # ⚠️ OPTIONAL: React Query
+│       │   └── [query files]
+│       ├── types.ts
 │       └── index.ts
 │
-├── types/                            # Shared types (not feature-specific)
-│   ├── api.ts                        # API-related types
-│   ├── common.ts                     # Common types used across features
-│   └── index.ts                      # Re-exports
+├── hooks/                                  # Global/shared React hooks
+│   └── useCategories.ts                    # Example: shared hook
 │
-├── __tests__/                        # Integration and E2E tests (optional)
-│   ├── setup.ts                      # Test setup file
-│   └── helpers/                      # Test helpers
-│       └── test-helpers.ts
+├── lib/                                    # Utility libraries and configurations
+│   ├── axios.ts                            # ⚠️ OPTIONAL: Axios HTTP client setup
+│   ├── utils.ts                            # General utility functions
+│   ├── utils.test.ts                       # ⚠️ OPTIONAL: Tests (if using Vitest)
+│   ├── navigation.ts                       # Navigation helpers
+│   ├── planogramCSV.ts                     # Feature-specific utilities
+│   ├── planogramCSV.test.ts                # ⚠️ OPTIONAL: Tests
+│   ├── generated/                          # ⚠️ OPTIONAL: Auto-generated files
+│   │   └── api-schemas.ts                  # Only if using OpenAPI code generation
+│   ├── react-query/                        # ⚠️ OPTIONAL: React Query setup
+│   │   ├── client.ts                       # QueryClient configuration
+│   │   ├── hooks.ts                        # Custom query hook utilities
+│   │   └── index.ts
+│   ├── zustand/                            # ⚠️ OPTIONAL: Zustand utilities
+│   │   └── create-selectors.ts             # Selector helper function
+│   └── types/                              # Shared TypeScript types
+│       └── index.ts
 │
-├── vitest.config.ts                  # Vitest configuration
-├── vitest.setup.ts                   # Vitest setup file
-└── tsconfig.json                      # TypeScript configuration
+├── stores/                                 # ⚠️ OPTIONAL: Global Zustand stores
+│   └── themeStore.ts                       # Example: theme management store
+│
+├── types/                                  # Global TypeScript types
+│   └── categories.ts                       # Example: shared types
+│
+├── public/                                 # Static assets
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── undraw_groceries_4via.png
+│   ├── undraw_groceries_4via.svg
+│   ├── vercel.svg
+│   └── window.svg
+│
+├── package.json                            # Dependencies and scripts (required)
+├── package-lock.json                       # Lock file (required)
+├── tsconfig.json                           # TypeScript configuration (required)
+├── next.config.ts                          # Next.js configuration (required)
+├── next-env.d.ts                           # Next.js TypeScript declarations (auto-generated)
+├── components.json                         # ⚠️ OPTIONAL: shadcn/ui configuration
+├── openapi-zod-client.config.ts            # ⚠️ OPTIONAL: OpenAPI code generation config
+├── vitest.config.ts                        # ⚠️ OPTIONAL: Vitest test configuration
+├── vitest.setup.ts                         # ⚠️ OPTIONAL: Vitest setup file
+├── postcss.config.mjs                      # ⚠️ OPTIONAL: PostCSS config (if using Tailwind)
+├── eslint.config.mjs                       # ESLint configuration (recommended)
+└── README.md                               # Project documentation
 ```
 
-## Testing File Organization
+## 🎯 Core Structure (Always Needed)
 
-### Component Testing Pattern
+These folders and files are essential for a Next.js project:
 
-Each component lives in its own folder with its test file side-by-side:
+- `app/` - Next.js App Router directory
+- `components/` - Shared components (at least basic structure)
+- `public/` - Static assets
+- `package.json` - Dependencies
+- `tsconfig.json` - TypeScript config
+- `next.config.ts` - Next.js config
+
+## ⚠️ Optional Libraries & When to Use Them
+
+### 1. **React Query** (`@tanstack/react-query`)
+
+**When to use**: Only if you need server state management, caching, background updates, and synchronization with your backend API.
+
+**Required setup**:
+
+- `lib/react-query/client.ts` - QueryClient configuration
+- `lib/react-query/hooks.ts` - Custom hook utilities (optional)
+- `app/providers.tsx` - QueryClientProvider wrapper
+- `features/[feature]/queries/` - Query hooks in each feature
+
+**If NOT using**:
+
+- Remove `@tanstack/react-query` and `@tanstack/react-query-devtools` dependencies
+- Delete `lib/react-query/` folder
+- Remove QueryClientProvider from `app/providers.tsx`
+- Delete all `queries/` folders in features
+- Use fetch API or axios directly instead
+
+---
+
+### 2. **Zustand** (`zustand`)
+
+**When to use**: Only if you need global client-side state management that's simpler than Redux.
+
+**Required setup**:
+
+- `lib/zustand/create-selectors.ts` - Selector helper (optional utility)
+- `stores/[store-name].ts` - Global stores (only if needed)
+- `features/[feature]/store/` - Feature-specific stores (only if needed)
+
+**If NOT using**:
+
+- Remove `zustand` dependency
+- Delete `lib/zustand/` folder
+- Delete `stores/` folder
+- Remove all feature `store/` folders
+- Use React Context API or component state instead
+
+---
+
+### 3. **shadcn/ui** (Radix UI + Tailwind CSS)
+
+**When to use**: Only if you want a customizable component library built on Radix UI primitives with Tailwind styling.
+
+**Required setup**:
+
+- `components.json` - shadcn configuration file
+- `components/ui/` - UI component primitives (add only components you need)
+- Dependencies: `@radix-ui/*`, `tailwindcss`, `class-variance-authority`, `clsx`, `tailwind-merge`
+
+**If NOT using**:
+
+- Remove all `@radix-ui/*` dependencies
+- Delete `components.json`
+- Delete `components/ui/` folder
+- Use a different UI library or build custom components
+
+---
+
+### 4. **Axios** (`axios`)
+
+**When to use**: Only if you prefer axios over the native fetch API for HTTP requests.
+
+**Required setup**:
+
+- `lib/axios.ts` - Axios instance with interceptors and configuration
+
+**If NOT using**:
+
+- Remove `axios` dependency
+- Delete `lib/axios.ts`
+- Use native `fetch()` API or your chosen HTTP client
+
+---
+
+### 5. **Vitest** (`vitest`)
+
+**When to use**: Only if you need unit testing, integration testing, or component testing.
+
+**Required setup**:
+
+- `vitest.config.ts` - Vitest configuration
+- `vitest.setup.ts` - Test setup file (mocks, global config)
+- Additional: `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`
+
+**If NOT using**:
+
+- Remove `vitest` and related testing dependencies
+- Delete `vitest.config.ts` and `vitest.setup.ts`
+- Delete all `*.test.ts` and `*.test.tsx` files
+
+---
+
+### 6. **OpenAPI Code Generation** (`openapi-zod-client`)
+
+**When to use**: Only if you have an OpenAPI/Swagger schema and want to generate TypeScript types and API clients automatically.
+
+**Required setup**:
+
+- `openapi-zod-client.config.ts` - Code generation configuration
+- `lib/generated/api-schemas.ts` - Generated types (auto-generated, don't edit)
+- Script in `package.json`: `"generate:schema": "openapi-zod-client ..."`
+
+**If NOT using**:
+
+- Remove `openapi-zod-client` dependency
+- Delete `openapi-zod-client.config.ts`
+- Delete `lib/generated/` folder
+- Manually define TypeScript types for your API
+
+---
+
+### 7. **Three.js** (`three`, `@react-three/fiber`, `@react-three/drei`)
+
+**When to use**: Only if you need 3D rendering, 3D visualizations, or interactive 3D scenes.
+
+**Required setup**:
+
+- Components using Three.js (e.g., `features/planogram/components/three-js-view/`)
+
+**If NOT using**:
+
+- Remove `three`, `@react-three/fiber`, `@react-three/drei` dependencies
+- Delete any Three.js-related components
+
+---
+
+### 8. **React Grid Layout** (`react-grid-layout`)
+
+**When to use**: Only if you need draggable, resizable grid layouts (like dashboard widgets).
+
+**If NOT using**:
+
+- Remove `react-grid-layout` and `@types/react-grid-layout` dependencies
+
+---
+
+### 9. **Font Awesome** (`@fortawesome/*`)
+
+**When to use**: Only if you need Font Awesome icons.
+
+**If NOT using**:
+
+- Remove all `@fortawesome/*` dependencies
+- Use alternative icon libraries (e.g., `lucide-react`, `@heroicons/react`)
+
+---
+
+### 10. **React Hot Toast** (`react-hot-toast`)
+
+**When to use**: Only if you need toast notifications.
+
+**If NOT using**:
+
+- Remove `react-hot-toast` dependency
+- Use alternative notification libraries or build custom solution
+
+---
+
+### 11. **Zod** (`zod`)
+
+**When to use**: Only if you need runtime type validation and schema validation.
+
+**If NOT using**:
+
+- Remove `zod` dependency
+- Use TypeScript types only or alternative validation libraries
+
+---
+
+### 12. **JOSE** (`jose`)
+
+**When to use**: Only if you need JWT token encoding/decoding on the client side.
+
+**If NOT using**:
+
+- Remove `jose` dependency
+- Handle JWT tokens on the backend or use alternative libraries
+
+---
+
+### 13. **Zodios** (`@zodios/core`)
+
+**When to use**: Only if you're using Zodios for type-safe API clients (often paired with OpenAPI generation).
+
+**If NOT using**:
+
+- Remove `@zodios/core` dependency
+
+---
+
+### 14. **MSW** (`msw`)
+
+**When to use**: Only if you need API mocking for development or testing.
+
+**If NOT using**:
+
+- Remove `msw` dependency
+- Use alternative mocking solutions or mock directly in tests
+
+---
+
+### 15. **Faker.js** (`@faker-js/faker`)
+
+**When to use**: Only if you need fake data generation for testing or development.
+
+**If NOT using**:
+
+- Remove `@faker-js/faker` dependency
+
+---
+
+## 📝 File Organization Patterns
+
+### Feature-Based Structure
+
+Each feature in `features/` should follow this pattern:
 
 ```
-features/auth/components/login-form/
-├── login-form.tsx                    # Component implementation
-└── login-form.test.tsx               # Component tests
+features/[feature-name]/
+├── components/              # Feature-specific components
+│   └── [component-name]/    # Component folder
+│       ├── index.tsx        # Public export (barrel export)
+│       └── [component-name].tsx  # Implementation
+├── queries/                 # ⚠️ ONLY if using React Query
+│   ├── use-[name]-query.ts
+│   ├── use-[name]-mutation.ts
+│   └── index.ts
+├── store/                   # ⚠️ ONLY if using Zustand
+│   ├── [feature]-slice.ts
+│   └── index.ts
+├── hooks/                   # Feature-specific hooks
+│   └── use-[name].ts
+├── types.ts                 # Feature TypeScript types
+└── index.ts                 # Public exports (barrel export)
 ```
 
-**Benefits:**
-- Tests are co-located with components (easy to find)
-- Clear relationship between component and its tests
-- Easy to delete component and tests together
-- Matches ESLint Unicorn kebab-case naming
+### Component Pattern
 
-### Query Hook Testing Pattern
+Components use a folder structure with barrel exports:
 
-React Query hooks are tested alongside their implementation:
+- `[component-name]/index.tsx` - Public export
+- `[component-name]/[component-name].tsx` - Implementation
 
-```
-features/auth/queries/
-├── use-login-mutation.ts             # Hook implementation
-└── use-login-mutation.test.ts        # Hook tests
-```
-
-### Store Testing Pattern
-
-Zustand stores are tested alongside their implementation:
-
-```
-features/auth/store/
-├── auth-store.ts                     # Store implementation
-└── auth-store.test.ts                # Store tests
-```
-
-### Test File Naming
-
-All test files use kebab-case with `.test.ts` or `.test.tsx` extension:
-
-✅ **Good**: `login-form.test.tsx`, `use-login-mutation.test.ts`, `auth-store.test.ts`
-❌ **Bad**: `LoginForm.test.tsx`, `useLoginMutation.test.ts`, `authStore.test.ts`
-
-## Feature Organization Principles
-
-### 1. Domain-Based, Not Route-Based
-
-Features are organized by business domain, not by URL structure:
-
-✅ **Good**: `features/stores/`, `features/products/` (domain boundaries)
-❌ **Bad**: `features/dashboard/stores/` (mirroring routes)
-
-### 2. Self-Contained Features
-
-Each feature contains everything it needs:
-
-- `components/` - Feature-specific UI components (with tests)
-- `queries/` - React Query hooks for data fetching (with tests)
-- `store/` - Zustand stores for feature-specific state (with tests)
-- `schemas/` - Form validation schemas (Zod)
-- `types.ts` - Feature-specific types
-
-### 3. Component Organization
-
-Components are grouped by functionality, not by route. Each component is in its own folder:
-
-```
-features/stores/components/
-├── store-list/
-│   ├── store-list.tsx
-│   └── store-list.test.tsx
-├── store-detail/
-│   ├── store-detail.tsx
-│   └── store-detail.test.tsx
-├── store-form/
-│   ├── store-form.tsx
-│   └── store-form.test.tsx
-└── index.ts                          # Re-exports all components
-```
-
-**Not organized like:**
-```
-❌ features/stores/components/
-   └── [store-id]/
-       └── store-detail.tsx           # Route-based (bad)
-```
-
-
-### Generated Schemas (from API)
-
-All API response schemas are stored in `schemas/generated/`.
-
-- Each schema file is auto-generated from API definitions
-- Files are marked with `⚠️ AUTO-GENERATED - DO NOT EDIT` comment
-- Types are inferred from Zod schemas using `z.infer<typeof schema>`
-- Use kebab-case for file names: `user-profile.ts`, `store-detail.ts`
-
-### Manual Form Schemas (Client-Side Validation)
-
-Form validation schemas live in features under `features/*/schemas/`.
-
-- Used for client-side form validation with React Hook Form
-- Separate from API response schemas
-- Types are inferred from schemas
-- Use kebab-case: `login-schema.ts`, `store-form-schema.ts`
-
-### Usage Pattern
-
-- Import generated schemas from `@/schemas/generated` for API responses
-- Import form schemas from feature directories for form validation
-- Use generated schemas in `httpRequest` to validate API responses
-- Use form schemas with React Hook Form for client-side validation
-
-## Query Organization
-
-Queries are grouped by entity within the feature:
-
-```
-features/stores/queries/
-    ├── use-stores-query.ts
-    ├── use-stores-query.test.ts
-    ├── use-store-query.ts
-    ├── use-store-query.test.ts
-    ├── use-create-store-mutation.ts
-    ├── use-create-store-mutation.test.ts
-    ├── use-update-store-mutation.ts
-    ├── use-update-store-mutation.test.ts
-    ├── use-delete-store-mutation.ts
-    ├── use-delete-store-mutation.test.ts
-    └── index.ts
-```
-
-### Query Example with Route Context
-
-Queries can accept route parameters (like `storeId`) to fetch data in context of a specific route. The query key should include these parameters for proper caching.
-
-## Store Organization
-
-### Feature-Specific Stores
-
-If state is only used within a feature, keep it in the feature:
-
-- Store file: `features/*/store/*-store.ts` (kebab-case)
-- Test file: `features/*/store/*-store.test.ts`
-- Use `createSelectors` helper for auto-generated selectors
-- Store contains feature-specific UI state and actions
-
-### Global Stores
-
-If state is shared across multiple features, use global store:
-
-- Store slices: `store/slices/*-slice.ts` (kebab-case)
-- Test files: `store/slices/*-slice.test.ts`
-- Combined in `store/index.ts` with `createSelectors`
-- Use for cross-feature state like user authentication, cart, etc.
-
-## Route Implementation
-
-Pages are thin composers that import from features:
-
-### Route Structure
-
-- **Stores List**: `app/(dashboard)/stores/page.tsx` - Uses `StoreList` component
-- **Store Detail**: `app/(dashboard)/stores/[store-id]/page.tsx` - Uses `StoreDetail` component
-- **Create Store**: `app/(dashboard)/stores/create/page.tsx` - Uses `StoreForm` component
-- **Edit Store**: `app/(dashboard)/stores/[store-id]/edit/page.tsx` - Uses `StoreForm` component
-- **Products List**: `app/(dashboard)/products/page.tsx` - Uses `ProductList` component
-- **Product Detail**: `app/(dashboard)/products/[product-id]/page.tsx` - Uses `ProductDetail` component
-- **Create Product**: `app/(dashboard)/products/create/page.tsx` - Uses `ProductForm` component
-- **Edit Product**: `app/(dashboard)/products/[product-id]/edit/page.tsx` - Uses `ProductForm` component
-
-### Page Pattern
-
-Pages should:
-- Use React Server Components when possible (default in Next.js 16)
-- Use `'use client'` directive only when needed (hooks, interactivity)
-- Import components from features
-- Pass route parameters to feature components
-- Handle navigation and mutations at the page level
-- Keep business logic in features, not pages
-
-## Import Patterns
-
-### ✅ Good Import Patterns
-
-- Import from generated schemas: `@/schemas/generated` (use index, not direct file)
-- Import form schemas from feature: `@/features/*/schemas`
-- Import queries from feature: `@/features/*/queries/*/use-*-query.ts`
-- Import components from feature: `@/features/*/components/*`
-- Import stores from feature: `@/features/*/store/*-store.ts`
-- Use path aliases (`@/`) instead of relative imports
-
-### ❌ Bad Import Patterns
-
-- Don't import from routes: `@/app/(dashboard)/stores/[store-id]/components/*`
-- Don't mix feature boundaries: `@/features/stores/components/products/*`
-- Don't use relative imports beyond `./` (use `@/` aliases)
-
-## Testing Setup
-
-### Vitest Configuration
-
-Create `vitest.config.ts`:
+This enables clean imports:
 
 ```typescript
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
-import path from 'path';
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
-    globals: true,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './'),
-    },
-  },
-});
+import { ComponentName } from '@/features/feature/components';
 ```
 
-### Test Utilities
+## 🔧 Configuration Files Explained
 
-Create `lib/test-utils.tsx` for React Testing Library setup:
+### `tsconfig.json`
 
-```typescript
-import { render, type RenderOptions } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { type ReactElement } from 'react';
+- TypeScript compiler configuration
+- Path aliases: `@/*` maps to root directory
+- **Required** for TypeScript projects
 
-const createTestQueryClient = () =>
-  new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+### `next.config.ts`
 
-export const renderWithProviders = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>,
-) => {
-  const queryClient = createTestQueryClient();
+- Next.js framework configuration
+- Custom webpack, image optimization, redirects, etc.
+- **Required** for Next.js projects
 
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+### `app/providers.tsx`
 
-  return render(ui, { wrapper: Wrapper, ...options });
-};
+- Global React context providers wrapper
+- Only include providers you're actually using:
+  - React Query (if using)
+  - Theme providers (if using)
+  - Auth providers (if using)
+  - Other context providers (if using)
 
-export * from '@testing-library/react';
+### `components.json`
+
+- **Optional**: shadcn/ui configuration
+- Defines component paths and styling preferences
+- Only needed if using shadcn/ui
+
+### `postcss.config.mjs`
+
+- **Optional**: PostCSS configuration
+- Required if using Tailwind CSS
+- Configures CSS processing
+
+### `eslint.config.mjs`
+
+- ESLint linting configuration
+- **Recommended** for code quality
+
+## 📦 Package.json Scripts
+
+Common scripts (add only what you need):
+
+```json
+{
+  "scripts": {
+    "dev": "next dev", // Development server
+    "build": "next build", // Production build
+    "start": "next start", // Production server
+    "lint": "eslint", // Lint code
+    "test:typecheck": "tsc --noEmit", // Type check
+    "test": "vitest", // ⚠️ Only if using Vitest
+    "test:run": "vitest run", // ⚠️ Only if using Vitest
+    "test:coverage": "vitest run --coverage", // ⚠️ Only if using Vitest
+    "generate:schema": "..." // ⚠️ Only if using OpenAPI generation
+  }
+}
 ```
 
-## When to Split Features
+## ✅ New Project Checklist
 
-Split features when:
+When starting a new project:
 
-1. **Domain Independence**: The feature can function independently
-2. **Complex Functionality**: The feature has substantial logic
-3. **Reusability**: The feature is used in multiple contexts
-4. **Team Ownership**: Different teams own different features
+1. ✅ **Start Minimal**
 
-Keep together when:
+   - Install only: `next`, `react`, `react-dom`, `typescript`
+   - Create basic structure: `app/`, `components/`, `public/`
 
-1. **Tight Coupling**: Features are always used together
-2. **Simple Functionality**: The feature is small and simple
-3. **Single Context**: The feature is only used in one place
+2. ✅ **Add Libraries Only When Needed**
 
-## Benefits
+   - Need server state? → Add React Query
+   - Need global state? → Add Zustand
+   - Need UI components? → Add shadcn/ui
+   - Need HTTP client? → Add axios (or use fetch)
+   - Need testing? → Add Vitest
+   - Need 3D? → Add Three.js
+   - Need validation? → Add Zod
 
-1. **Separation of Concerns**: Routes handle navigation, features handle business logic
-2. **Reusability**: Features can be used across multiple routes
-3. **Maintainability**: Clear boundaries make code easier to understand
-4. **Testability**: Features can be tested independently of routes
-5. **Scalability**: Easy to add new features without affecting existing ones
-6. **Team Collaboration**: Different teams can work on different features
-7. **ESLint Compliance**: Kebab-case naming follows Unicorn rules
-8. **Test Co-location**: Tests are easy to find and maintain
+3. ✅ **Create Folders Only When Implementing**
 
-## Summary
+   - Don't create empty `queries/` folders
+   - Don't create empty `store/` folders
+   - Create feature folders when you start building features
 
-- **Routes** = URL structure (hierarchical, user-facing)
-- **Features** = Domain boundaries (business logic, reusable)
-- **Components** = Organized by functionality in folders with side-by-side tests
-- **Schemas** = Generated (API) vs Manual (forms), both using Zod
-- **Stores** = Feature-specific or global based on scope
-- **Queries** = Grouped by entity within features with tests
-- **Pages** = Thin composers that import from features
-- **Tests** = Co-located with implementation files using kebab-case
-- **Naming** = All files use kebab-case (ESLint Unicorn requirement)
+4. ✅ **Regular Cleanup**
+   - Remove unused dependencies
+   - Delete unused folders
+   - Remove unused configuration files
 
-This structure keeps your codebase organized, maintainable, testable, and scalable as your application grows while adhering to ESLint Unicorn naming conventions.
+## 🚫 Anti-Patterns to Avoid
 
+- ❌ Installing React Query "just in case" - only add when you need server state management
+- ❌ Setting up Zustand "for future use" - add when you actually need global state
+- ❌ Creating empty `queries/` or `store/` folders - create them when you add the first query/store
+- ❌ Installing UI libraries you don't use - only add what you need
+- ❌ Keeping unused dependencies - regularly audit and remove
+- ❌ Adding all shadcn/ui components - only add components you actually use
+- ❌ Setting up testing framework without writing tests - add when you start testing
+
+## 📖 Best Practices
+
+1. **Start Minimal**: Begin with the smallest possible setup
+2. **Add Incrementally**: Add libraries and folders as you need them
+3. **Feature-First**: Organize by features, not by file type
+4. **Barrel Exports**: Use `index.ts` files for clean imports
+5. **Type Safety**: Keep TypeScript types close to where they're used
+6. **Component Co-location**: Keep related files together
+7. **Regular Cleanup**: Periodically remove unused dependencies and folders
+8. **Document Decisions**: Note why you added each library in your README
+
+## 🎨 Styling Approach
+
+This template assumes **Tailwind CSS** for styling. If using a different approach:
+
+- **CSS Modules**: Create `*.module.css` files alongside components
+- **Styled Components**: Install `styled-components` and create styled components
+- **CSS-in-JS**: Use your preferred solution (emotion, etc.)
+- **Plain CSS**: Use `app/globals.css` and component-specific CSS files
+
+Adjust the structure accordingly.
+
+---
+
+## 📚 Summary
+
+**Remember**: This structure is a template. Adapt it to your project's actual needs.
+
+**Golden Rule**: Less is more - only include what you use!
+
+- ✅ Start with core Next.js structure
+- ✅ Add libraries when you have a specific need
+- ✅ Create folders when you start implementing features
+- ✅ Regularly clean up unused code and dependencies
+- ✅ Document why you added each major library
+
+This approach keeps your project lean, maintainable, and easy to understand.
